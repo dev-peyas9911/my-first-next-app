@@ -1,27 +1,32 @@
 import { auth } from "@/auth";
 
 export const middleware = auth((req) => {
-  const isLoggedIn = !!req.auth;
-  const { pathname } = req.nextUrl;
+  try {
+    const isLoggedIn = !!req.auth;
+    const { pathname } = req.nextUrl;
 
-  // Protected routes that require authentication
-  const protectedRoutes = ["/items"];
+    // Protected routes that require authentication
+    const protectedRoutes = ["/items"];
 
-  // Check if the current route is protected
-  const isProtectedRoute = protectedRoutes.some(route =>
-    pathname.startsWith(route)
-  );
+    // Check if the current route is protected
+    const isProtectedRoute = protectedRoutes.some(route =>
+      pathname.startsWith(route)
+    );
 
-  // Redirect to login if trying to access protected route without authentication
-  if (isProtectedRoute && !isLoggedIn) {
-    const loginUrl = new URL("/login", req.nextUrl.origin);
-    loginUrl.searchParams.set("callbackUrl", pathname);
-    return Response.redirect(loginUrl);
-  }
+    // Redirect to login if trying to access protected route without authentication
+    if (isProtectedRoute && !isLoggedIn) {
+      const loginUrl = new URL("/login", req.nextUrl.origin);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return Response.redirect(loginUrl);
+    }
 
-  // Redirect to items page if already logged in and trying to access login
-  if (pathname === "/login" && isLoggedIn) {
-    return Response.redirect(new URL("/items", req.nextUrl.origin));
+    // Redirect to items page if already logged in and trying to access login
+    if (pathname === "/login" && isLoggedIn) {
+      return Response.redirect(new URL("/items", req.nextUrl.origin));
+    }
+  } catch (error) {
+    console.error("Middleware error:", error);
+    // Continue if there's any error, don't block the request
   }
 });
 
