@@ -1,11 +1,29 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { useState } from 'react';
 
 export default function ItemsPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login?callbackUrl=/items');
+    }
+  }, [status, router]);
+
+  if (status === 'loading') {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
+  if (!session) {
+    return null;
+  }
   const [items, setItems] = useState([
     { id: 1, title: 'Learn Next.js', completed: false, list: 'Learning' },
     { id: 2, title: 'Build a project', completed: false, list: 'Learning' },
