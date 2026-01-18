@@ -3,9 +3,19 @@ import { notFound } from 'next/navigation';
 
 async function getItem(id) {
   try {
+    // Use relative URL for internal API calls on server side
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    
     const response = await fetch(
-      `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/items/${id}`,
-      { cache: 'no-store' }
+      `${baseUrl}/api/items/${id}`,
+      { 
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
     );
     if (!response.ok) return null;
     return response.json();
