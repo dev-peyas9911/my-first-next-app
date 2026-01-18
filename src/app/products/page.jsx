@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+export const dynamic = 'force-dynamic';
+
 async function getItems() {
   try {
     // Use relative URL for internal API calls on server side
@@ -11,7 +13,6 @@ async function getItems() {
     const response = await fetch(
       `${baseUrl}/api/items`,
       { 
-        cache: 'no-store',
         headers: {
           'Content-Type': 'application/json',
         }
