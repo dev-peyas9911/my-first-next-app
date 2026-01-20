@@ -1,16 +1,13 @@
 import { auth } from "@/auth";
 
 export const middleware = auth((req) => {
-  const isLoggedIn = !!req.auth;
   const { pathname } = req.nextUrl;
+  const isLoggedIn = !!req.auth;
 
-  // Redirect to items page if already logged in and trying to access login
+  // Redirect logged-in users away from login page
   if (pathname === "/login" && isLoggedIn) {
     return Response.redirect(new URL("/items", req.nextUrl.origin));
   }
-
-  // Allow the request to continue
-  return null;
 });
 
 export const config = {

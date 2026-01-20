@@ -1,23 +1,17 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
 
 // Mock user database - in production, use a real database
 const users = [
   {
     id: "1",
     email: "user@example.com",
-    password: "$2a$10$X3Y8Z9a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6", // "password123"
+    password: "password123", // Use plain password for demo
     name: "Test User"
   }
 ];
 
-// Hash a password for verification
-async function verifyPassword(plainPassword, hashedPassword) {
-  return await bcrypt.compare(plainPassword, hashedPassword);
-}
-
-export const { auth } = NextAuth({
+export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -37,13 +31,8 @@ export const { auth } = NextAuth({
           return null;
         }
 
-        // Verify password
-        const isPasswordValid = await verifyPassword(
-          credentials.password,
-          user.password
-        );
-
-        if (!isPasswordValid) {
+        // Plain password comparison (for demo only)
+        if (credentials.password !== user.password) {
           return null;
         }
 
