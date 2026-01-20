@@ -11,7 +11,7 @@ const users = [
   }
 ];
 
-export const { auth, handlers, signIn, signOut } = NextAuth({
+const config = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -69,4 +69,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
     strategy: "jwt"
   }
-});
+};
+
+export const { auth } = NextAuth(config);
