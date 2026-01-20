@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 
-export const middleware = auth(function(req) {
-  // This function only runs if auth succeeds
+export const middleware = auth((req) => {
   const isLoggedIn = !!req.auth;
   const { pathname } = req.nextUrl;
 
@@ -9,6 +8,8 @@ export const middleware = auth(function(req) {
   if (pathname === "/login" && isLoggedIn) {
     return Response.redirect(new URL("/items", req.nextUrl.origin));
   }
+
+  return undefined;
 });
 
 export const config = {
