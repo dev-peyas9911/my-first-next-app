@@ -9,7 +9,8 @@ export const middleware = auth((req) => {
     return Response.redirect(new URL("/items", req.nextUrl.origin));
   }
 
-  return undefined;
+  // Allow the request to continue
+  return null;
 });
 
 export const config = {
